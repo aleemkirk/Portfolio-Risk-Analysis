@@ -60,7 +60,7 @@ class PortfolioOptimizer:
         return self.daily_ROR
 
     #compute mean average return for each security 
-    def meanDailyROR(self) -> pd.DataFrame:
+    def meanDailyROR(self) -> pd.Series:
         
         if self.data.empty:
             raise Exception("Securities data does not exist. Try calling getData() first.")
