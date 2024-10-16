@@ -86,6 +86,7 @@ class PortfolioMetrics:
         self.cov_daily_ROR = self.daily_ROR[self.portfolio].cov()
         return self.cov_daily_ROR
     
+    # calculate portfolio beta
     def beta(self) -> pd.Series:
 
         if self.data.empty:
@@ -95,7 +96,8 @@ class PortfolioMetrics:
         if self.cov_daily_ROR.empty:
             raise Exception("Covariance information does not exist. Try calling covDailyROR() first.")
         
-        self.__beta = pd.Series(self.cov_daily_ROR[self.__market])/self.daily_ROR[self.__market].var(axis=0)
+        self.__beta = (self.cov_daily_ROR.iloc[-1, :self.num_securities])/self.daily_ROR[self.__market].var(axis=0)
+        self.__beta = np.matmul(self.__beta.to_list(), np.transpose(self.weights))
         return self.__beta
     
     # compute annualized return of portfolio in %
