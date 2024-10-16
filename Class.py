@@ -5,13 +5,14 @@ import numpy as np
 
 class PortfolioMetrics:
 
-    def __init__(self, securities, weights = None ,market=None, start_date = None, end_date = None) -> None:
+    def __init__(self, securities, weights = None ,market=None, start_date = None, end_date = None, trading_days = None) -> None:
         self.securities = securities
         self.num_securities = len(securities)
         self.weights = weights or [1/self.num_securities for _ in range(self.num_securities)] #assume equal investment if weights are not specified
         self.__market = market or 'NASDAQ_COMP'
         self.__start_date = start_date or '2014-10-08'
         self.__end_date = end_date or '2024-08-27'
+        self.__trading_days = trading_days or 251
         self.portfolio = self.securities + [self.__market]
         self.__path = 'data/'
         self.data = pd.DataFrame(data = None)
@@ -97,6 +98,13 @@ class PortfolioMetrics:
         self.__beta = pd.Series(self.cov_daily_ROR[self.__market])/self.daily_ROR[self.__market].var(axis=0)
         return self.__beta
     
+    #return annualized return of portfolio in %
+    def annReturn(self) -> np.ndarray:
+
+        if self.mean_daily_ROR.empty:
+            raise Exception("Mean daily return does not exist. Try calling meanDailyROR() first.")
+        
+        return self.__trading_days*np.matmul(self.weights, self.mean_daily_ROR[:self.num_securities].to_list()).sum()
 
 
 # Diversify portfolio using K-means algorithm
@@ -104,4 +112,4 @@ class PortfolioDiversifier:
 
     def __init__(self, securities) -> None:
         self.securities = securities
-        self.metrics = PortfolioMetrics(self.securities)
+        self.metrics = PortfolioMetrics(self.securities) #instance of metrics object to calcualte portfolio metrics
