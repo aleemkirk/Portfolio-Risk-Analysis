@@ -3,11 +3,11 @@ import numpy as np
 
 class PortfolioOptimizer:
 
-    def __init__(self, securities, market='NASDAQ_COMP', start_date = '2014-10-08', end_date = '2024-08-27') -> None:
+    def __init__(self, securities, market=None, start_date = None, end_date = None) -> None:
         self.securities = securities
-        self.__market = market
-        self.__start_date = start_date
-        self.__end_date = end_date
+        self.__market = market or 'NASDAQ_COMP'
+        self.__start_date = start_date or '2014-10-08'
+        self.__end_date = end_date or '2024-08-27'
         self.portfolio = self.securities + [self.__market]
         self.__path = 'data/'
         self.num_securities = len(securities)
