@@ -11,6 +11,7 @@ class PortfolioOptimizer:
         self.__path = 'data/'
         self.num_securities = len(securities)
         self.data = pd.DataFrame(data = None)
+        self.daily_ROR = pd.DataFrame(data = None)
 
     #read securities data into a DataFrame
     def getData(self) -> pd.DataFrame:
@@ -51,9 +52,17 @@ class PortfolioOptimizer:
         if self.data.empty:
             raise Exception("Securities data does not exist. Try calling getData() first.")
 
-        self.daily_ROR = pd.DataFrame()
         self.daily_ROR[self.portfolio] = (self.data[self.portfolio].diff()/self.data[self.portfolio].shift(1))*100
         self.daily_ROR['date'] = self.data['date']
         return self.daily_ROR
 
+    def meanDailyROR(self) -> pd.DataFrame:
+        
+        if self.data.empty:
+            raise Exception("Securities data does not exist. Try calling getData() first.")
+        if self.daily_ROR.empty:
+            raise Exception("Return information does not exist. Try calling meanDailyROR() first.")
+        
+        self.mean_daily_ROR = self.daily_ROR[self.portfolio].mean(axis=0)
+        return self.mean_daily_ROR
 
