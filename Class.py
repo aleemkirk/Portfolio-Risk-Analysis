@@ -3,14 +3,15 @@ import numpy as np
 
 class PortfolioOptimizer:
 
-    def __init__(self, securities, market=None, start_date = None, end_date = None) -> None:
+    def __init__(self, securities, weights = None ,market=None, start_date = None, end_date = None) -> None:
         self.securities = securities
+        self.num_securities = len(securities)
+        self.weights = weights or [1/self.num_securities for _ in range(self.num_securities)] #assume equal investment if weights are not specified
         self.__market = market or 'NASDAQ_COMP'
         self.__start_date = start_date or '2014-10-08'
         self.__end_date = end_date or '2024-08-27'
         self.portfolio = self.securities + [self.__market]
         self.__path = 'data/'
-        self.num_securities = len(securities)
         self.data = pd.DataFrame(data = None)
         self.daily_ROR = pd.DataFrame(data = None)
         self.mean_daily_ROR = pd.Series(data = None)

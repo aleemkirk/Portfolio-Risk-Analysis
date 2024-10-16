@@ -3,12 +3,13 @@ import pandas as pd
 import numpy as np
 
 
-x = ['AAOI', 'AAPL', 'TSLA', 'MSFT']
+x = ['AAOI', 'TSLA', 'MSFT', 'AAPL', 'ACAD']
 optim = PortfolioOptimizer(securities=x)
 
 optim.getData()
 optim.dailyROR()
 optim.covDailyROR()
 print(optim.beta())
+
 
 
