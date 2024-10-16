@@ -4,17 +4,9 @@ import numpy as np
 
 
 x = ['AAOI', 'TSLA', 'MSFT', 'AAPL', 'ACAD']
-optim = PortfolioMetrics(securities=x)
+optim = PortfolioMetrics(securities=x, weights=[.1, .5, .2, .1, .1])
 
-optim.getData()
-optim.dailyROR()
-optim.covDailyROR()
-optim.meanDailyROR()
-print(optim.annReturn())
-print(optim.annRisk())
-print(optim.divIndex())
-
-print(optim.beta())
+optim.getMetrics()
 
 
 

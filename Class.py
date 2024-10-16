@@ -6,6 +6,14 @@ import numpy as np
 class PortfolioMetrics:
 
     def __init__(self, securities, weights = None ,market=None, start_date = None, end_date = None, trading_days = None) -> None:
+
+        # Error handling
+        if len(securities) != len(weights):
+            raise Exception('Investment weights and securities are not the same length')
+        
+        if np.sum(weights) != 1:
+            raise ValueError('Investment weights must sum to 1')
+         
         self.securities = securities
         self.num_securities = len(securities)
         self.weights = weights or [1/self.num_securities for _ in range(self.num_securities)] #assume equal investment if weights are not specified
@@ -128,20 +136,24 @@ class PortfolioMetrics:
         self.div_index = np.matmul(self.daily_ROR[self.securities].std().to_numpy(), np.transpose(self.weights))/np.sqrt(np.matmul(self.weights, np.matmul(self.cov_daily_ROR.iloc[:self.num_securities, :self.num_securities].to_numpy(), np.transpose(self.weights))))
         return self.div_index
 
-    def getMetrics(self):
+    def getMetrics(self) -> None:
 
         self.getData() # get data
         self.dailyROR() # compute daily ROR
         self.meanDailyROR() # compute mean daily ROR
         self.covDailyROR()
-        self.beta()
-        self.annReturn()
-        self.annRisk()
-        self.divIndex()
+        print(f'Portfolio beta: {self.beta():.2f}')
+        print(f'Portfolio annualized return: {self.annReturn():.2f}%')
+        print(f'Portfolio annualized risk: {self.annRisk():.2f}%')
+        print(f'Portfolio diversification index: {self.divIndex():.2f}')
 
 # Diversify portfolio using K-means algorithm
 class PortfolioDiversifier:
 
     def __init__(self, securities) -> None:
         self.securities = securities
-        self.metrics = PortfolioMetrics(self.securities) #instance of metrics object to calcualte portfolio metrics
+        self.num_securities = len(securities)
+        self.metrics = PortfolioMetrics(self.securities) #instance of metrics object to calculate portfolio metrics
+        self.clusters = None
+
+    
