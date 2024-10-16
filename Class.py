@@ -104,19 +104,38 @@ class PortfolioMetrics:
         if self.mean_daily_ROR.empty:
             raise Exception("Mean daily return does not exist. Try calling meanDailyROR() first.")
         
-        return self.__trading_days*np.matmul(self.weights, self.mean_daily_ROR[:self.num_securities].to_list()).sum()
+        self.annual_return = self.__trading_days*np.matmul(self.weights, self.mean_daily_ROR[:self.num_securities].to_list()).sum()
+        return self.annual_return
     
     # compute annualized risk of portfolio in %
     def annRisk(self) -> np.ndarray:
 
         if self.cov_daily_ROR.empty:
             raise Exception("Covariance information does not exist. Try calling covDailyROR() first.")
+        self.annual_risk = np.sqrt(self.__trading_days*np.matmul(np.matmul(self.weights, self.cov_daily_ROR.iloc[:self.num_securities, :self.num_securities].to_numpy()), np.transpose(self.weights)))
+        return self.annual_risk
+
+    def divIndex(self):
+
+
+        if self.daily_ROR.empty:
+            raise Exception("Return information does not exist. Try calling meanDailyROR() first.")
+        if self.cov_daily_ROR.empty:
+            raise Exception("Covariance information does not exist. Try calling covDailyROR() first.")
         
-        return np.sqrt(self.__trading_days*np.matmul(np.matmul(self.weights, self.cov_daily_ROR.iloc[:self.num_securities, :self.num_securities].to_numpy()), np.transpose(self.weights)))
+        self.div_index = np.matmul(self.daily_ROR[self.securities].std().to_numpy(), np.transpose(self.weights))/np.sqrt(np.matmul(self.weights, np.matmul(self.cov_daily_ROR.iloc[:self.num_securities, :self.num_securities].to_numpy(), np.transpose(self.weights))))
+        return self.div_index
 
+    def getMetrics(self):
 
-
-
+        self.getData() # get data
+        self.dailyROR() # compute daily ROR
+        self.meanDailyROR() # compute mean daily ROR
+        self.covDailyROR()
+        self.beta()
+        self.annReturn()
+        self.annRisk()
+        self.divIndex()
 
 # Diversify portfolio using K-means algorithm
 class PortfolioDiversifier:
