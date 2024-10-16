@@ -10,6 +10,7 @@ class PortfolioOptimizer:
         self.portfolio = self.securities + [self.__market]
         self.__path = 'data/'
         self.num_securities = len(securities)
+        self.data = pd.DataFrame(data = None)
 
     #read securities data into a DataFrame
     def getData(self) -> pd.DataFrame:
@@ -21,7 +22,7 @@ class PortfolioOptimizer:
                 self.data = pd.merge(self.data, df[['date', 'close']], on='date', how='outer', suffixes=(ticker, ticker))
         except:
             print(f"Invalid security ticker given: {ticker}")
-            self.data = []
+            self.data = pd.DataFrame(data=None)
             return
         else:
             #rename column names with Ticker values
@@ -42,7 +43,17 @@ class PortfolioOptimizer:
             #filter data from start and end dates
             self.data = self.data[(self.data['date'] >= self.__start_date) & (self.data['date'] <= self.__end_date)]
 
-
         return self.data 
+    
+    #compute daily rate of return (ROR)
+    def dailyROR(self) -> pd.DataFrame:
+
+        if self.data.empty:
+            raise Exception("Securities data does not exist. Try calling getData() first.")
+
+        self.daily_ROR = pd.DataFrame()
+        self.daily_ROR[self.portfolio] = (self.data[self.portfolio].diff()/self.data[self.portfolio].shift(1))*100
+        self.daily_ROR['date'] = self.data['date']
+        return self.daily_ROR
 
 
