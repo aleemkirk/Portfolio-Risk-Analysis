@@ -21,7 +21,7 @@ class PortfolioMetrics:
         self.cov_daily_ROR = pd.DataFrame(data = None)
         self.__beta = pd.Series(data = None)
 
-    #read securities data into a DataFrame
+    # read securities data into a DataFrame
     def getData(self) -> pd.DataFrame:
 
         self.data = pd.DataFrame(columns=['date'])
@@ -54,7 +54,7 @@ class PortfolioMetrics:
 
         return self.data 
     
-    #compute daily rate of return (ROR)
+    # compute daily rate of return (ROR)
     def dailyROR(self) -> pd.DataFrame:
 
         if self.data.empty:
@@ -64,7 +64,7 @@ class PortfolioMetrics:
         self.daily_ROR['date'] = self.data['date']
         return self.daily_ROR
 
-    #compute mean average return for each security 
+    # compute mean average return for each security 
     def meanDailyROR(self) -> pd.Series:
         
         if self.data.empty:
@@ -75,7 +75,7 @@ class PortfolioMetrics:
         self.mean_daily_ROR = self.daily_ROR[self.portfolio].mean(axis=0)
         return self.mean_daily_ROR
     
-    #compute covariance of daily returns
+    # compute covariance of daily returns
     def covDailyROR(self) -> pd.DataFrame:
 
         if self.data.empty:
@@ -98,13 +98,24 @@ class PortfolioMetrics:
         self.__beta = pd.Series(self.cov_daily_ROR[self.__market])/self.daily_ROR[self.__market].var(axis=0)
         return self.__beta
     
-    #return annualized return of portfolio in %
+    # compute annualized return of portfolio in %
     def annReturn(self) -> np.ndarray:
 
         if self.mean_daily_ROR.empty:
             raise Exception("Mean daily return does not exist. Try calling meanDailyROR() first.")
         
         return self.__trading_days*np.matmul(self.weights, self.mean_daily_ROR[:self.num_securities].to_list()).sum()
+    
+    # compute annualized risk of portfolio in %
+    def annRisk(self) -> np.ndarray:
+
+        if self.cov_daily_ROR.empty:
+            raise Exception("Covariance information does not exist. Try calling covDailyROR() first.")
+        
+        return np.sqrt(self.__trading_days*np.matmul(np.matmul(self.weights, self.cov_daily_ROR.iloc[:self.num_securities, :self.num_securities].to_numpy()), np.transpose(self.weights)))
+
+
+
 
 
 # Diversify portfolio using K-means algorithm
