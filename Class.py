@@ -11,8 +11,8 @@ class PortfolioMetrics:
         if len(securities) != len(weights):
             raise Exception('Investment weights and securities are not the same length')
         
-        if np.sum(weights) != 1:
-            raise ValueError('Investment weights must sum to 1')
+        if np.sum(weights).round(decimals = 1) != 1.0:
+            raise Exception('Investment weights must sum to 1')
          
         self.securities = securities
         self.num_securities = len(securities)
