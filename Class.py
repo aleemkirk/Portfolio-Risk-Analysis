@@ -80,3 +80,15 @@ class PortfolioOptimizer:
 
         self.cov_daily_ROR = self.daily_ROR[self.portfolio].cov()
         return self.cov_daily_ROR
+    
+    def beta(self) -> pd.Series:
+
+        if self.data.empty:
+            raise Exception("Securities data does not exist. Try calling getData() first.")
+        if self.daily_ROR.empty:
+            raise Exception("Return information does not exist. Try calling meanDailyROR() first.")
+        if self.cov_daily_ROR.empty:
+            raise Exception("Covariance information does not exist. Try calling covDailyROR() first.")
+        
+        self.__beta = pd.Series(self.cov_daily_ROR[self.__market])/self.daily_ROR[self.__market].var(axis=0)
+        return self.__beta
