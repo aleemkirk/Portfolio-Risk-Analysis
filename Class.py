@@ -6,15 +6,9 @@ from sklearn.cluster import KMeans
 
 class PortfolioMetrics:
 
-    def __init__(self, securities, weights = None ,market=None, start_date = None, end_date = None, trading_days = None) -> None:
+    def __init__(self, securities, weights = None ,market = None, start_date = None, end_date = None, trading_days = None) -> None:
 
-        # Error handling
-        if len(securities) != len(weights):
-            raise Exception('Investment weights and securities are not the same length')
         
-        if np.sum(weights).round(decimals = 1) != 1.0:
-            raise Exception('Investment weights must sum to 1')
-         
         self.securities = securities
         self.num_securities = len(securities)
         self.weights = weights or [1/self.num_securities for _ in range(self.num_securities)] #assume equal investment if weights are not specified
@@ -29,6 +23,13 @@ class PortfolioMetrics:
         self.mean_daily_ROR = pd.Series(data = None)
         self.cov_daily_ROR = pd.DataFrame(data = None)
         self.__beta = pd.Series(data = None)
+
+         # Error handling
+        if len(securities) != len(weights):
+            raise Exception('Investment weights and securities are not the same length')
+        
+        if np.sum(weights).round(decimals = 1) != 1.0:
+            raise Exception('Investment weights must sum to 1')
 
     # read securities data into a DataFrame
     def getData(self) -> pd.DataFrame:
@@ -151,11 +152,20 @@ class PortfolioMetrics:
 # Diversify portfolio using K-means algorithm
 class PortfolioDiversifier:
 
-    def __init__(self, securities, clusters = None, weights = None ,market=None, start_date = None, end_date = None, trading_days = None) -> None:
+    def __init__(self, securities, clusters = None, weights = None, market = None, start_date = None, end_date = None, trading_days = None) -> None:
+        
+        np.random.seed(100)
+        
         self.securities = securities
         self.num_securities = len(securities)
+        self._weights = weights or [1/self.num_securities for _ in range(self.num_securities)] #assume equal investment if weights are not specified
+        self.market = market or 'NASDAQ_COMP'
+        self.start_date = start_date or '2014-10-08'
+        self.end_date = end_date or '2024-08-27'
+        self.trading_days = trading_days or 251
+        self.num_securities = len(securities)
         self.weights = weights or None
-        self.metrics = PortfolioMetrics(securities, weights=self.weights) #instance of metrics object to calculate portfolio metrics
+        self.metrics = PortfolioMetrics(securities, weights = self._weights ,market=self.market, start_date = self.start_date, end_date = self.end_date, trading_days = self.trading_days) #instance of metrics object to calculate portfolio metrics
         self.clusters = clusters or 1
 
     def diversify(self):

@@ -3,11 +3,9 @@ import pandas as pd
 import numpy as np
 
 
-w = [.1, .7, .2, .0]
+w = [.1, .5, .2, .2]
 x = ['AAOI', 'TSLA', 'MSFT', 'AAPL']
-optim = PortfolioMetrics(securities=x, weights=w)
-optim.getMetrics()
-
-
+d = PortfolioDiversifier(securities=x, weights=w, clusters=3)
+print(d.diversify())
 
 
