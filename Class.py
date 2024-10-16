@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class PortfolioOptimizer:
 
@@ -12,6 +13,8 @@ class PortfolioOptimizer:
         self.num_securities = len(securities)
         self.data = pd.DataFrame(data = None)
         self.daily_ROR = pd.DataFrame(data = None)
+        self.mean_daily_ROR = pd.DataFrame(data = None)
+        self.cov_daily_ROR = pd.DataFrame(data = None)
 
     #read securities data into a DataFrame
     def getData(self) -> pd.DataFrame:
@@ -56,6 +59,7 @@ class PortfolioOptimizer:
         self.daily_ROR['date'] = self.data['date']
         return self.daily_ROR
 
+    #compute mean average return for each security 
     def meanDailyROR(self) -> pd.DataFrame:
         
         if self.data.empty:
@@ -65,4 +69,14 @@ class PortfolioOptimizer:
         
         self.mean_daily_ROR = self.daily_ROR[self.portfolio].mean(axis=0)
         return self.mean_daily_ROR
+    
+    #compute covariance of daily returns
+    def covDailyROR(self) -> pd.DataFrame:
 
+        if self.data.empty:
+            raise Exception("Securities data does not exist. Try calling getData() first.")
+        if self.daily_ROR.empty:
+            raise Exception("Return information does not exist. Try calling meanDailyROR() first.")
+
+        self.cov_daily_ROR = self.daily_ROR[self.portfolio].cov()
+        return self.cov_daily_ROR
