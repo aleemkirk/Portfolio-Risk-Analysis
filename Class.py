@@ -13,8 +13,9 @@ class PortfolioOptimizer:
         self.num_securities = len(securities)
         self.data = pd.DataFrame(data = None)
         self.daily_ROR = pd.DataFrame(data = None)
-        self.mean_daily_ROR = pd.DataFrame(data = None)
+        self.mean_daily_ROR = pd.Series(data = None)
         self.cov_daily_ROR = pd.DataFrame(data = None)
+        self.__beta = pd.Series(data = None)
 
     #read securities data into a DataFrame
     def getData(self) -> pd.DataFrame:
