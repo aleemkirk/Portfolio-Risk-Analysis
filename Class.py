@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 
-class PortfolioOptimizer:
+# Get investment portfolio metrics
+
+class PortfolioMetrics:
 
     def __init__(self, securities, weights = None ,market=None, start_date = None, end_date = None) -> None:
         self.securities = securities
@@ -94,3 +96,12 @@ class PortfolioOptimizer:
         
         self.__beta = pd.Series(self.cov_daily_ROR[self.__market])/self.daily_ROR[self.__market].var(axis=0)
         return self.__beta
+    
+
+
+# Diversify portfolio using K-means algorithm
+class PortfolioDiversifier:
+
+    def __init__(self, securities) -> None:
+        self.securities = securities
+        self.metrics = PortfolioMetrics(self.securities)
