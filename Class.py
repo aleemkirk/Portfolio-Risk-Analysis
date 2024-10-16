@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.cluster import KMeans
 
 # Get investment portfolio metrics
 
@@ -150,10 +151,26 @@ class PortfolioMetrics:
 # Diversify portfolio using K-means algorithm
 class PortfolioDiversifier:
 
-    def __init__(self, securities) -> None:
+    def __init__(self, securities, clusters = None, weights = None ,market=None, start_date = None, end_date = None, trading_days = None) -> None:
         self.securities = securities
         self.num_securities = len(securities)
-        self.metrics = PortfolioMetrics(self.securities) #instance of metrics object to calculate portfolio metrics
-        self.clusters = None
+        self.weights = weights or None
+        self.metrics = PortfolioMetrics(securities, weights=self.weights) #instance of metrics object to calculate portfolio metrics
+        self.clusters = clusters or 1
+
+    def diversify(self):
+
+        self.metrics.getMetrics()
+
+        features = np.concatenate([self.metrics.mean_daily_ROR[self.metrics.securities].to_numpy().reshape(len(self.metrics.weights), 1), self.metrics.cov_daily_ROR.iloc[:self.metrics.num_securities, :self.metrics.num_securities].to_numpy()], axis=1)
+        cluster = KMeans(algorithm='lloyd', max_iter=100, n_clusters=self.clusters)
+        cluster.fit(features)
+
+        centroids = cluster.cluster_centers_
+        self.labels = cluster.labels_
+        print('Centroids:\n', centroids)
+        print('Labels:\n', self.labels)
+
+        return self.labels
 
     
