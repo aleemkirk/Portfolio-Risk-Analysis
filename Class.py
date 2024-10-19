@@ -8,7 +8,6 @@ class PortfolioMetrics:
 
     def __init__(self, securities, weights = None ,market = None, start_date = None, end_date = None, trading_days = None) -> None:
 
-        
         self.securities = securities
         self.num_securities = len(securities)
         self.weights = weights or [1/self.num_securities for _ in range(self.num_securities)] #assume equal investment if weights are not specified
@@ -150,29 +149,19 @@ class PortfolioMetrics:
         print(f'Portfolio diversification index: {self.divIndex():.2f}')
 
 # Diversify portfolio using K-means algorithm
-class PortfolioDiversifier:
+class PortfolioDiversifier(PortfolioMetrics):
 
     def __init__(self, securities, clusters = None, weights = None, market = None, start_date = None, end_date = None, trading_days = None) -> None:
         
         np.random.seed(100)
-
-        self.securities = securities
-        self.num_securities = len(securities)
-        self._weights = weights or [1/self.num_securities for _ in range(self.num_securities)] #assume equal investment if weights are not specified
-        self.market = market or 'NASDAQ_COMP'
-        self.start_date = start_date or '2014-10-08'
-        self.end_date = end_date or '2024-08-27'
-        self.trading_days = trading_days or 251
-        self.num_securities = len(securities)
-        self.weights = weights or None
-        self.metrics = PortfolioMetrics(securities, weights = self._weights ,market=self.market, start_date = self.start_date, end_date = self.end_date, trading_days = self.trading_days) #instance of metrics object to calculate portfolio metrics
+        super().__init__(securities, weights, market, start_date, end_date, trading_days)
         self.clusters = clusters or 1
 
     def diversify(self):
 
-        self.metrics.getMetrics()
+        self.getMetrics()
 
-        features = np.concatenate([self.metrics.mean_daily_ROR[self.metrics.securities].to_numpy().reshape(len(self.metrics.weights), 1), self.metrics.cov_daily_ROR.iloc[:self.metrics.num_securities, :self.metrics.num_securities].to_numpy()], axis=1)
+        features = np.concatenate([self.mean_daily_ROR[self.securities].to_numpy().reshape(len(self.weights), 1), self.cov_daily_ROR.iloc[:self.num_securities, :self.num_securities].to_numpy()], axis=1)
         cluster = KMeans(algorithm='lloyd', max_iter=100, n_clusters=self.clusters)
         cluster.fit(features)
 
@@ -181,4 +170,5 @@ class PortfolioDiversifier:
 
         return self.labels
 
-    
+    def showAttr(self) -> None:
+        print(self.__dict__)
