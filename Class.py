@@ -143,7 +143,7 @@ class PortfolioMetrics:
         self.getData() # get data
         self.dailyROR() # compute daily ROR
         self.meanDailyROR() # compute mean daily ROR
-        self.covDailyROR()
+        self.covDailyROR() # compute covariance 
         print(f'Portfolio beta: {self.elasticity():.2f}')
         print(f'Portfolio annualized return: {self.annReturn():.2f}%')
         print(f'Portfolio annualized risk: {self.annRisk():.2f}%')
@@ -178,7 +178,11 @@ class PortfolioDiversifier(PortfolioMetrics):
         
         for i in range(self.clusters):
             index = np.where(self.labels == i)[0]
-            self.stock_clusters.insert(i, itemgetter(*index)(self.securities))
+            x = itemgetter(*index)(self.securities)
+            if isinstance(x, tuple):
+                self.stock_clusters.insert(i, [*x])
+            else:
+                self.stock_clusters.insert(i, [x])
         
         return self.stock_clusters
 
