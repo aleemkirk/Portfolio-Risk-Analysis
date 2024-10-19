@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans
+from operator import itemgetter
 
 # Get investment portfolio metrics
 
@@ -156,10 +157,11 @@ class PortfolioDiversifier(PortfolioMetrics):
         np.random.seed(100)
         super().__init__(securities, weights, market, start_date, end_date, trading_days)
         self.clusters = clusters or 1
+        self.stock_clusters = []
 
     def diversify(self):
 
-        self.getMetrics()
+        self.getMetrics() #compute all the financial metrics and populate class attributes
 
         features = np.concatenate([self.mean_daily_ROR[self.securities].to_numpy().reshape(len(self.weights), 1), self.cov_daily_ROR.iloc[:self.num_securities, :self.num_securities].to_numpy()], axis=1)
         cluster = KMeans(algorithm='lloyd', max_iter=100, n_clusters=self.clusters)
@@ -169,6 +171,21 @@ class PortfolioDiversifier(PortfolioMetrics):
         self.labels = cluster.labels_
 
         return self.labels
+
+
+    #returns a list of all securities in each cluster where the list index represents the index
+    def stockClusters(self) -> list:
+        
+        for i in range(self.clusters):
+            index = np.where(self.labels == i)[0]
+            self.stock_clusters.insert(i, itemgetter(*index)(self.securities))
+        
+        return self.stock_clusters
+
+    def covar(self):
+
+        return self.cov_daily_ROR.iloc[self.labels]
+
 
     def showAttr(self) -> None:
         print(self.__dict__)
