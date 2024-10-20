@@ -32,10 +32,10 @@ def main():
 
     d = PortfolioDiversifier(securities=securities,
                              weights=weights, clusters=clusters)
-
-    print('\nDefault Portfolio Metrics:')
     d.diversify()
     d.stockClusters()
+    
+    print('\n\nDiversified Portfolio Metrics:')
     d.divPortfolio()
 
 
