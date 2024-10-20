@@ -242,8 +242,7 @@ class PortfolioDiversifier(PortfolioMetrics):
 
         m = PortfolioMetrics(securities=self.diversified_portfolio, weights=self.new_weights, market=self.market,
                              end_date=self.end_date, start_date=self.start_date, trading_days=self.trading_days)
-        
-        print('\n\nDiversified Portfolio Metrics:')
+
         print(self.diversified_portfolio)
         print([round(i, 2) for i in self.new_weights])
         m.getMetrics()
