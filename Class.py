@@ -184,6 +184,8 @@ class PortfolioMetrics:
         print(f'Portfolio diversification index: {self.divIndex():.2f}')
 
 # Diversify portfolio using K-means algorithm
+
+
 class PortfolioDiversifier(PortfolioMetrics):
 
     def __init__(self, securities, clusters=None, weights=None, market=None, start_date=None, end_date=None, trading_days=None) -> None:
@@ -230,10 +232,20 @@ class PortfolioDiversifier(PortfolioMetrics):
             index = vol.index(min(vol))
             self.diversified_portfolio.append(clt[index])
 
-        m = PortfolioMetrics(securities=self.diversified_portfolio, market=self.market,
+        pos = []
+        for i, item in enumerate(self.diversified_portfolio):
+            pos.append(self.securities.index(item))
+
+        old_weights = [self.weights[i] for i in pos]
+
+        self.new_weights = [x/sum(old_weights) for x in old_weights]
+
+        m = PortfolioMetrics(securities=self.diversified_portfolio, weights=self.new_weights, market=self.market,
                              end_date=self.end_date, start_date=self.start_date, trading_days=self.trading_days)
+        
         print('\n\nDiversified Portfolio Metrics:')
         print(self.diversified_portfolio)
+        print([round(i, 2) for i in self.new_weights])
         m.getMetrics()
 
         return self.diversified_portfolio
