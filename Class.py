@@ -25,10 +25,10 @@ class PortfolioMetrics:
         self.beta = pd.Series(data = None)
 
          # Error handling
-        if len(securities) != len(weights):
+        if len(self.securities) != len(self.weights):
             raise Exception('Investment weights and securities are not the same length')
         
-        if np.sum(weights).round(decimals = 1) != 1.0:
+        if np.sum(self.weights).round(decimals = 1) != 1.0:
             raise Exception('Investment weights must sum to 1')
 
     # read securities data into a DataFrame
@@ -119,6 +119,14 @@ class PortfolioMetrics:
         self.annual_return = self.trading_days*np.matmul(self.weights, self.mean_daily_ROR[:self.num_securities].to_list()).sum()
         return self.annual_return
     
+    def annMarketReturn(self) -> np.ndarray:
+
+        if self.mean_daily_ROR.empty:
+            raise Exception("Mean daily return does not exist. Try calling meanDailyROR() first.")
+        
+        self.annual_market_return = self.trading_days*(self.mean_daily_ROR[self.market])
+        return self.annual_market_return
+
     # compute annualized risk of portfolio in %
     def annRisk(self) -> np.ndarray:
 
@@ -146,6 +154,7 @@ class PortfolioMetrics:
         self.covDailyROR() # compute covariance 
         print(f'Portfolio beta: {self.elasticity():.2f}')
         print(f'Portfolio annualized return: {self.annReturn():.2f}%')
+        print(f'Market annualized return: {self.annMarketReturn():.2f}%')
         print(f'Portfolio annualized risk: {self.annRisk():.2f}%')
         print(f'Portfolio diversification index: {self.divIndex():.2f}')
 
@@ -158,6 +167,7 @@ class PortfolioDiversifier(PortfolioMetrics):
         super().__init__(securities, weights, market, start_date, end_date, trading_days)
         self.clusters = clusters or 1
         self.stock_clusters = []
+        self.diversified_portfolio = []
 
     def diversify(self):
 
@@ -185,6 +195,22 @@ class PortfolioDiversifier(PortfolioMetrics):
                 self.stock_clusters.insert(i, [x])
         
         return self.stock_clusters
+    
+    
+    #returns list of diversified portfolio to minimize security volitility (variance)
+    def divPortfolio(self) -> list:
+        
+        for clt in self.stock_clusters:
+            vol = list(np.diag(self.cov_daily_ROR.loc[clt][clt]))
+            index = vol.index(min(vol))
+            self.diversified_portfolio.append(clt[index]) 
+
+            
+        m = PortfolioMetrics(securities = self.diversified_portfolio, market = self.market, end_date = self.end_date, start_date = self.start_date, trading_days = self.trading_days)
+        print('\n\nDiversified Portfolio Metrics:')
+        m.getMetrics()
+
+        return self.diversified_portfolio
 
     def covar(self):
 
