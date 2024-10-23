@@ -32,3 +32,13 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 
 
 ## Command Line Arguments
+
+`main.py` takes several arguments:
+
+``` 
+
+--path , -p: path to securities and investment weight data. 
+
+
+
+```
