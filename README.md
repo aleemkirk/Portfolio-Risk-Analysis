@@ -44,11 +44,13 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 
 ## Example
 
-`python main.py -p securities.csv -n 2 -m y -w 0.1 0.2 0.2 0.5`
+`python main.py -p securities.csv -n 2`
 
 Assuming that 4 tickers are given, the script will output a portfolio of two securities (one from each cluster). An example output will be: 
 
+```
 Original Portfolio Metrics:
+['AAOI', 'TSLA', 'MSFT', 'NVDA', 'AMZN', 'META', 'CTSH', 'CRWD', 'TXN', 'GOOGL', 'DASH', 'MDB']
 Portfolio beta: 1.28
 Portfolio annualized return: 29.07%
 Market annualized return: 16.13%
