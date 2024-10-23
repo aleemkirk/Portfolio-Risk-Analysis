@@ -23,3 +23,12 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 
 
 ## Running Script
+
+- Include the ticker symbols of all securities you wish to consider in your portfolio selection in the `securities.csv` file (optional: add the investment weights of each security. Note that all weights mush sum to 1).
+
+- Run the script from the command line 
+
+    `python main.py --path (path to securities.csv) --num (desired portfolio size)`
+
+
+## Command Line Arguments
