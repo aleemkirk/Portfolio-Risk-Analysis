@@ -32,6 +32,8 @@ def main():
 
     d = PortfolioDiversifier(securities=securities,
                              weights=weights, clusters=clusters)
+    
+    print('\n\nOriginal Portfolio Metrics:')
     d.diversify()
     d.stockClusters()
 
