@@ -19,7 +19,7 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 
 - Install all dependencies from `requirements.txt`.
 
-`pip install -r requirements.txt`
+    `pip install -r requirements.txt`
 
 
 ## Running Script
