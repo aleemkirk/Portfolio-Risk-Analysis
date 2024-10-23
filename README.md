@@ -40,3 +40,8 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 --num, -n:      desired portfolio size.  
 --manual, -m:   y/n value indicating if you are entering investment weights in the command line or securities.csv file.  
 --weights, -w:  investment weights of each security. Must sum to 1 and length must be the same as the number of securities.
+
+
+## Example
+
+`python main.py -p securities.csv -n 4 -m y -w 0.1 0.2 0.2 0.5`
