@@ -34,7 +34,7 @@ def main():
                              weights=weights, clusters=clusters)
     d.diversify()
     d.stockClusters()
-    
+
     print('\n\nDiversified Portfolio Metrics:')
     d.divPortfolio()
 

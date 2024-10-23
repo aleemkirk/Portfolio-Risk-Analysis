@@ -5,8 +5,9 @@ This project focuses on diversifying securities in the NASDAQ securities exchang
 Using K-means helps investors avoid over-concentration in any single asset class or risk category. This method ensures a broader mix of assets, potentially improving the portfolio's stability and long-term performance.
 
 
-
 # Data
+
+Securities data was found on [Kaggle](https://www.kaggle.com/datasets/paultimothymooney/stock-market-data). 
 
 # Usage
 
