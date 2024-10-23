@@ -36,4 +36,5 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 `main.py` takes several arguments:
 
 
-> --path , -p: path to securities and investment weight data. 
+> --path , -p:  path to securities and investment weight data.  
+--num, -n:      desired portfolio size.
