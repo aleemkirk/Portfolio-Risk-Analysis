@@ -18,6 +18,7 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 - Ensure `python 3.12` is installed. Older versions may work but scripts were only tested on `python 3.12`.
 
 - Install all dependencies from `requirements.txt`.
+
 `pip install -r requirements.txt`
 
 
