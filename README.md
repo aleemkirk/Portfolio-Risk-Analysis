@@ -49,7 +49,7 @@ NASDAQ securities data was found on [Kaggle](https://www.kaggle.com/datasets/pau
 Assuming that 4 tickers are given, the script will output a portfolio of two securities (one from each cluster). An example output will be
 
 <blockquote>
- Original Portfolio Metrics:
+```Original Portfolio Metrics:
 Portfolio beta: 1.28
 Portfolio annualized return: 29.07%
 Market annualized return: 16.13%
@@ -64,6 +64,6 @@ Portfolio beta: 1.27
 Portfolio annualized return: 37.47%
 Market annualized return: 16.13%
 Portfolio annualized risk: 32.08%
-Portfolio diversification index: 1.15
+Portfolio diversification index: 1.15```
 
 </blockquote>
