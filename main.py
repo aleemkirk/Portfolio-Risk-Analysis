@@ -1,5 +1,3 @@
-#this is a comment
-
 from Class import PortfolioDiversifier
 import pandas as pd
 import argparse
@@ -46,6 +44,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-#another comment
